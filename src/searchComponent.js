@@ -10,6 +10,7 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react";
+import { getGroups } from "./services/api";
 
 class searchComponent extends Component {
   constructor(props) {
@@ -23,12 +24,13 @@ class searchComponent extends Component {
     };
   }
 
-  onChange = (e) => {
+  onChange = async(e) => {
     const { options } = this.props;
     const userInput = e.currentTarget.value;
     const filteredOptions = options.filter(
       (option) => option.toLowerCase().indexOf(userInput.toLowerCase()) > -1
     );
+    let response = await getGroups(userInput);
     this.setState({
       activeOption: 0,
       filteredOptions,
