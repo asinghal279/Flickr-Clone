@@ -11,6 +11,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { getGroups } from "./services/api";
+import { throttle } from "throttle-debounce";
 
 class searchComponent extends Component {
   constructor(props) {
@@ -22,21 +23,28 @@ class searchComponent extends Component {
       showOptions: false,
       userInput: "",
     };
+    this.autocompleteSearchThrottled = throttle(500, this.updateOptions);
   }
 
-  onChange = async(e) => {
-    const { options } = this.props;
+  updateOptions = async (q) => {
+    this.fetchOptions(q);
+  };
+
+  fetchOptions = async (q) => {
+    let response = await getGroups(q);
+    this.setState({
+      filteredOptions: response.data.groups ? response.data.groups.group.splice(0,5) : [],
+    });
+  };
+
+  onChange = (e) => {
     const userInput = e.currentTarget.value;
-    const filteredOptions = options.filter(
-      (option) => option.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-    );
-    let response = await getGroups(userInput);
     this.setState({
       activeOption: 0,
-      filteredOptions,
       showOptions: true,
-      userInput,
-    });
+      userInput
+    })
+    this.autocompleteSearchThrottled(userInput);
   };
 
   onClick = (e) => {
@@ -54,7 +62,7 @@ class searchComponent extends Component {
       this.setState({
         activeOption: 0,
         showOptions: false,
-        userInput: filteredOptions[activeOption],
+        userInput: filteredOptions[activeOption].name,
       });
     } else if (showOptions && e.keyCode === 38) {
       if (activeOption === 0) {
@@ -74,6 +82,7 @@ class searchComponent extends Component {
   };
 
   render() {
+    console.log(this.state);
     const {
       onChange,
       onKeyDown,
@@ -93,7 +102,7 @@ class searchComponent extends Component {
               }
               return (
                 <Button bg={className} key={optionName} onClick={onClick}>
-                  {optionName}
+                  {optionName.name}
                 </Button>
               );
             })}
