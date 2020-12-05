@@ -32,6 +32,7 @@ class searchComponent extends Component {
 
   fetchOptions = async (q) => {
     let response = await getGroups(q);
+    console.log(response);
     this.setState({
       filteredOptions: response.data.groups ? response.data.groups.group.splice(0,5) : [],
     });
@@ -79,10 +80,10 @@ class searchComponent extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.props.updateSearchInput(this.state.userInput);
   };
 
   render() {
-    console.log(this.state);
     const {
       onChange,
       onKeyDown,
@@ -101,7 +102,7 @@ class searchComponent extends Component {
                 className = "lightgrey";
               }
               return (
-                <Button bg={className} key={optionName} onClick={onClick}>
+                <Button bg={className} key={optionName.nsid} onClick={onClick}>
                   {optionName.name}
                 </Button>
               );
