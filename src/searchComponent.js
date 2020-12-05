@@ -4,6 +4,7 @@ import { Search2Icon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  FormControl,
   Input,
   InputGroup,
   InputLeftElement,
@@ -46,19 +47,19 @@ class searchComponent extends Component {
   };
 
   onKeyDown = (e) => {
-    const { activeOption, filteredOptions } = this.state;
-    if (e.keyCode === 13) {
+    const { activeOption, filteredOptions, showOptions } = this.state;
+    if (showOptions && e.keyCode === 13) {
       this.setState({
         activeOption: 0,
         showOptions: false,
         userInput: filteredOptions[activeOption],
       });
-    } else if (e.keyCode === 38) {
+    } else if (showOptions && e.keyCode === 38) {
       if (activeOption === 0) {
         return;
       }
       this.setState({ activeOption: activeOption - 1 });
-    } else if (e.keyCode === 40) {
+    } else if (showOptions && e.keyCode === 40) {
       if (activeOption - 1 === filteredOptions.length) {
         return;
       }
@@ -66,11 +67,16 @@ class searchComponent extends Component {
     }
   };
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   render() {
     const {
       onChange,
       onKeyDown,
       onClick,
+      handleSubmit,
       state: { activeOption, filteredOptions, showOptions, userInput },
     } = this;
     let optionList;
@@ -101,19 +107,26 @@ class searchComponent extends Component {
     }
     return (
       <Box>
-        <InputGroup>
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Search2Icon color="gray.300" />}
-          />
-          <Input
-            type="phone"
-            placeholder="Enter group name..."
-            onChange={onChange}
-            onKeyDown={onKeyDown}
-            value={userInput}
-          />
-        </InputGroup>
+        <form onSubmit={handleSubmit}>
+          <FormControl>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<Search2Icon color="gray.300" />}
+              />
+              <Input
+                type="phone"
+                placeholder="Enter group name..."
+                onChange={onChange}
+                onKeyDown={onKeyDown}
+                value={userInput}
+              />
+              <Button ml={2} type="submit">
+                Search
+              </Button>
+            </InputGroup>
+          </FormControl>
+        </form>
         {optionList}
       </Box>
     );
