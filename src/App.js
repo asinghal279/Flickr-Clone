@@ -49,7 +49,7 @@ class App extends Component {
               <WrapItem w="45%">
                 <Link
                   to={{
-                    pathname: `/gallery`,
+                    pathname: `/gallery/${group.name}`,
                     state: {
                       groupId: group.nsid,
                     },

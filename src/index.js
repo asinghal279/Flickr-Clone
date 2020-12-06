@@ -11,12 +11,8 @@ ReactDOM.render(
     <Router>
       <ChakraProvider>
         <Switch>
-          <Route exact path="/">
-            <App />
-          </Route>
-          <Route path="/gallery">
-            <Gallery />
-          </Route>
+          <Route exact component={App} path="/"></Route>
+          <Route component={Gallery} path="/gallery/:groupName"></Route>
         </Switch>
       </ChakraProvider>
     </Router>

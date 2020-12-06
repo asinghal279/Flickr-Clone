@@ -1,4 +1,4 @@
-import { Box, Image, Text } from "@chakra-ui/react";
+import { Box, Image, Skeleton, Text } from "@chakra-ui/react";
 import React, { Component } from "react";
 import { getPictures } from "./services/api";
 import Masonry from "react-responsive-masonry";
@@ -9,24 +9,31 @@ export class gallery extends Component {
 
     this.state = {
       pictures: [],
+      isLoaded: true,
     };
   }
 
   componentDidMount = async () => {
-    let response = await getPictures();
+    console.log(this.props.location.state.groupId);
+    this.setState({
+        isLoaded:false,
+    })
+    let response = await getPictures(this.props.location.state.groupId);
     console.log(response);
     this.setState({
       pictures: response.data.photos.photo,
+      isLoaded:true
     });
   };
 
   render() {
-    const { pictures } = this.state;
+    const { pictures, isLoaded } = this.state;
     return (
       <Masonry columnsCount={3} gutter={5}>
         {pictures.map((image, i) => (
+            <Skeleton isLoaded={isLoaded}>
           <Box position="relative">
-            <Image src={image.url_l} alt="Picture Not available" />
+            {image.url_l && <Image src={image.url_l} alt="Picture Not available" />}
             <Box
               px={2}
               opacity="0.8"
@@ -43,6 +50,7 @@ export class gallery extends Component {
               </Text>
             </Box>
           </Box>
+          </Skeleton>
         ))}
       </Masonry>
     );
