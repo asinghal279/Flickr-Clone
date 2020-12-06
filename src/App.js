@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { getGroups } from "./services/api";
 import { BsPeopleFill, BsImages, BsFillChatDotsFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -46,36 +47,46 @@ class App extends Component {
           <Wrap spacing="20px" justify="center">
             {this.state.groups.map((group) => (
               <WrapItem w="45%">
-                <Box bg="white" w="100%">
-                  <Flex p={4}>
-                    <Avatar
-                      size="xl"
-                      name="Ryan Florence"
-                      p={2}
-                      bg="none"
-                      border="1px"
-                      borderStyle="double"
-                      src={group.iconurls.large}
-                    />
-                    <Box p={4}>
-                      <Text>{group.name}</Text>
-                      <Flex align="center" justify="space-between">
-                        <Box px={2}>
-                          <Icon mr={1} as={BsPeopleFill} />
-                          {group.members}
-                        </Box>
-                        <Box px={2}>
-                          <Icon mr={1} as={BsImages} />
-                          {group.pool_count}
-                        </Box>
-                        <Box px={2}>
-                          <Icon mr={1} as={BsFillChatDotsFill} />
-                          {group.topic_count}
-                        </Box>
-                      </Flex>
-                    </Box>
-                  </Flex>
-                </Box>
+                <Link
+                  to={{
+                    pathname: `/gallery`,
+                    state: {
+                      groupId: group.nsid,
+                    },
+                  }}
+                  key={group.nsid}
+                >
+                  <Box bg="white" w="100%">
+                    <Flex p={4}>
+                      <Avatar
+                        size="xl"
+                        p={2}
+                        bg="none"
+                        border="1px"
+                        borderColor="lightgrey"
+                        borderStyle="double"
+                        src={group.iconurls.large}
+                      />
+                      <Box p={4}>
+                        <Text>{group.name}</Text>
+                        <Flex align="center" justify="space-between">
+                          <Box px={2}>
+                            <Icon mr={1} as={BsPeopleFill} />
+                            {group.members}
+                          </Box>
+                          <Box px={2}>
+                            <Icon mr={1} as={BsImages} />
+                            {group.pool_count}
+                          </Box>
+                          <Box px={2}>
+                            <Icon mr={1} as={BsFillChatDotsFill} />
+                            {group.topic_count}
+                          </Box>
+                        </Flex>
+                      </Box>
+                    </Flex>
+                  </Box>
+                </Link>
               </WrapItem>
             ))}
           </Wrap>

@@ -7,3 +7,9 @@ export const getGroups = (str) => {
     `https://www.flickr.com/services/rest/?method=flickr.groups.search&extras=extras=extras=datecreate%2Cdate_activity%2Ceighteenplus%2Cinvitation_only%2Cneeds_interstitial%2Cnon_members_privacy%2Cpool_pending_count%2Cprivacy%2Cmember_pending_count%2Cicon_urls%2Cdate_activity_detail%2Cuse_vespa%2Cmembership_info%2Chas_pending_invite%2Csecure_rules&api_key=${key}&text=${str}&format=json&per_page=20&nojsoncallback=?`
   );
 };
+
+export const getPictures = () => {
+  return Axios.get(
+    `https://api.flickr.com/services/rest?extras=count_views%2Cdate_taken%2Cdate_upload%2Cdescription%2Cowner_name%2Ceighteenplus%2Cpool_pending_count%2Cicon_urls&get_group_info=1&group_id=1986740%40N21&method=flickr.groups.pools.getPhotos&api_key=${key}&format=json&per_page=20&nojsoncallback=?`
+  );
+};

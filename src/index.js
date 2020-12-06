@@ -3,12 +3,23 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Gallery from "./gallery";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider>
-      <App />
-    </ChakraProvider>
+    <Router>
+      <ChakraProvider>
+        <Switch>
+          <Route exact path="/">
+            <App />
+          </Route>
+          <Route path="/gallery">
+            <Gallery />
+          </Route>
+        </Switch>
+      </ChakraProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById("root")
 );
