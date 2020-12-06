@@ -1,7 +1,8 @@
-import { Box, Image, Skeleton, Text } from "@chakra-ui/react";
+import { Box, Image, Skeleton, Spinner, Text } from "@chakra-ui/react";
 import React, { Component } from "react";
 import { getPictures } from "./services/api";
 import Masonry from "react-responsive-masonry";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export class gallery extends Component {
   constructor(props) {
@@ -9,50 +10,73 @@ export class gallery extends Component {
 
     this.state = {
       pictures: [],
-      isLoaded: true,
+      page: 0,
+      poolPending: true,
     };
   }
 
-  componentDidMount = async () => {
-    console.log(this.props.location.state.groupId);
+  fetchPictures = async () => {
+    let response = await getPictures(
+      this.props.location.state.groupId,
+      this.state.page + 1
+    );
     this.setState({
-        isLoaded:false,
-    })
-    let response = await getPictures(this.props.location.state.groupId);
-    console.log(response);
-    this.setState({
-      pictures: response.data.photos.photo,
-      isLoaded:true
+      pictures: [...this.state.pictures, ...response.data.photos.photo],
+      page: this.state.page + 1,
+      poolPending:
+        response.data.photos.page === response.data.photos.pages ? false : true,
     });
   };
 
+  componentDidMount = () => {
+    this.setState({
+      page: 1,
+    });
+    this.fetchPictures();
+  };
+
   render() {
-    const { pictures, isLoaded } = this.state;
+    const { pictures, poolPending } = this.state;
     return (
-      <Masonry columnsCount={3} gutter={5}>
-        {pictures.map((image, i) => (
-            <Skeleton isLoaded={isLoaded}>
-          <Box position="relative">
-            {image.url_l && <Image src={image.url_l} alt="Picture Not available" />}
-            <Box
-              px={2}
-              opacity="0.8"
-              position="absolute"
-              bottom="0"
-              color="white"
-              w="100%"
-            >
-              <Text fontSize="14px" fontWeight="600">
-                {image.title}
-              </Text>
-              <Text as="i" fontSize="10px">
-                By {image.ownername}
-              </Text>
+      <InfiniteScroll
+        dataLength={pictures.length}
+        next={this.fetchPictures}
+        hasMore={poolPending}
+        loader={
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        }
+      >
+        <Masonry columnsCount={3} gutter={5}>
+          {pictures.map((image, i) => (
+            <Box position="relative">
+              {image.url_l && (
+                <Image src={image.url_l} alt="Picture Not available" />
+              )}
+              <Box
+                px={2}
+                opacity="0.8"
+                position="absolute"
+                bottom="0"
+                color="white"
+                w="100%"
+              >
+                <Text fontSize="14px" fontWeight="600">
+                  {image.title}
+                </Text>
+                <Text as="i" fontSize="10px">
+                  By {image.ownername}
+                </Text>
+              </Box>
             </Box>
-          </Box>
-          </Skeleton>
-        ))}
-      </Masonry>
+          ))}
+        </Masonry>
+      </InfiniteScroll>
     );
   }
 }
