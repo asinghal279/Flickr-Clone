@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Spinner, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Image, Spinner, Text } from "@chakra-ui/react";
 import React, { Component } from "react";
 import { getPictures } from "./services/api";
 import Masonry from "react-responsive-masonry";
@@ -20,12 +20,16 @@ export class gallery extends Component {
       this.props.location.state.groupId,
       this.state.page + 1
     );
-    this.setState({
-      pictures: [...this.state.pictures, ...response.data.photos.photo],
-      page: this.state.page + 1,
-      poolPending:
-        response.data.photos.page === response.data.photos.pages ? false : true,
-    });
+    if (response.data && response.data.photos) {
+      this.setState({
+        pictures: [...this.state.pictures, ...response.data.photos.photo],
+        page: this.state.page + 1,
+        poolPending:
+          response.data.photos.page === response.data.photos.pages
+            ? false
+            : true,
+      });
+    }
   };
 
   componentDidMount = () => {
@@ -43,13 +47,15 @@ export class gallery extends Component {
         next={this.fetchPictures}
         hasMore={poolPending}
         loader={
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-            size="xl"
-          />
+          <Center>
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          </Center>
         }
       >
         <Flex justify="center">
