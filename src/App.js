@@ -5,7 +5,6 @@ import SearchComponent from "./searchComponent";
 import {
   Avatar,
   Box,
-  Center,
   Container,
   Flex,
   Heading,
@@ -45,8 +44,8 @@ class App extends Component {
 
         {this.state.groups.length>0 && (
           <Container maxW="70%" bg="#f3f5f6">
-            <Heading p={2}>Flickr Groups</Heading>
-            <Wrap spacing="20px" justify="center">
+            <Heading p={4}>Flickr Groups</Heading>
+            <Wrap spacing={8} justify="center">
               {this.state.groups.map((group) => (
                 <WrapItem w="45%" key={group.nsid}>
                   <Link

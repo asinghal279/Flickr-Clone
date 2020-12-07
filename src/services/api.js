@@ -1,6 +1,6 @@
 const { default: Axios } = require("axios");
 
-const key = `fa9da8fd0fc564e7f49da614b4d1613e`;
+const key = process.env.REACT_APP_API_KEY;
 
 export const getGroups = (str) => {
   return Axios.get(

@@ -80,6 +80,9 @@ class searchComponent extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({
+      showOptions:false,
+    })
     this.props.updateSearchInput(this.state.userInput);
   };
 
